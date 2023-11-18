@@ -157,8 +157,14 @@ class Snake(object):
         self.segments.insert(0, Segment(x, y))
 
     def change_direction(self, event):
-        """Изменение направления движения змейки"""
-        if event.keysym in self.mapping:
+        """Изменение направления движения змейки."""
+        # Не реагируем на нажатие кнопки в противоход движения змейки
+        button = 1
+        if abs(self.vector[0]) == abs(self.mapping[event.keysym][0]) and abs(
+            self.vector[1]
+        ) == abs(self.mapping[event.keysym][1]):
+            button = None
+        if event.keysym in self.mapping and button:
             self.vector = self.mapping[event.keysym]
 
     # Функция обновления змейки при старте новой игры
