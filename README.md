@@ -22,7 +22,7 @@ cd snake
 ```
 Запустите игру:
 ```
-python snake_game.py
+python snake.py
 ```
 
 ## Управление
