@@ -44,8 +44,9 @@ def main():
 
         # скорость змейки
         root.after(150, main)
-    # Не IN_GAME -> останавливаем игру и выводим сообщения
+    # Не IN_GAME -> останавливаем игру, удаляем змейку и выводим сообщения
     else:
+        s.reset_snake()
         set_state(restart_text, "normal")
         set_state(game_over_text, "normal")
         set_state(close_but, "normal")
