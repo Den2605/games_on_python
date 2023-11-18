@@ -21,7 +21,6 @@ def main():
     global IN_GAME
     if IN_GAME:
         s.move()
-
         # Определяем координаты головы
         head_coords = c.coords(s.segments[-1].instance)
         x1, y1, x2, y2 = head_coords
@@ -46,7 +45,8 @@ def main():
         root.after(150, main)
     # Не IN_GAME -> останавливаем игру, удаляем змейку и выводим сообщения
     else:
-        s.reset_snake()
+        if s:
+            s.reset_snake()
         set_state(restart_text, "normal")
         set_state(game_over_text, "normal")
         set_state(close_but, "normal")
@@ -54,7 +54,7 @@ def main():
 
 # Вспомогательная функция
 def create_block():
-    """Создаем еду для змейки"""
+    """Создаем еду для змейки."""
     global BLOCK
     posx = SEG_SIZE * random.randint(1, (WIDTH - SEG_SIZE) / SEG_SIZE)
     posy = SEG_SIZE * random.randint(1, (HEIGHT - SEG_SIZE) / SEG_SIZE)
@@ -69,7 +69,8 @@ def create_block():
 
 # Подсчет очков
 class Score(object):
-    # функция отображения очков на экране
+    """Отображение очков."""
+
     def __init__(self):
         self.score = 0
         self.x = 55
@@ -84,8 +85,8 @@ class Score(object):
             state="hidden",
         )
 
-    # функция счета очков и вывод на экран
     def increment(self):
+        """Подсчёт очков."""
         c.delete("score")
         self.score += 1
         c.create_text(
@@ -97,8 +98,8 @@ class Score(object):
             tag="score",
         )
 
-    # функция сброса очков при начале новой игры
     def reset(self):
+        """Сброс очков при начале новой игры."""
         c.delete("score")
         self.score = 0
 
@@ -117,11 +118,10 @@ class Segment(object):
 
 
 class Snake(object):
-    """Класс змейки"""
+    """Класс змейки."""
 
     def __init__(self, segments):
         self.segments = segments
-
         # Варианты движения
         self.mapping = {
             "Down": (0, 1),
@@ -129,12 +129,11 @@ class Snake(object):
             "Up": (0, -1),
             "Left": (-1, 0),
         }
-
         # инициируем направление движения
         self.vector = self.mapping["Right"]
 
     def move(self):
-        """Двигаем змейку в заданном направлении"""
+        """Двигаем змейку в заданном направлении."""
         for index in range(len(self.segments) - 1):
             segment = self.segments[index].instance
             x1, y1, x2, y2 = c.coords(self.segments[index + 1].instance)
@@ -150,7 +149,7 @@ class Snake(object):
         )
 
     def add_segment(self):
-        """Добавляем сегмент змейки"""
+        """Добавляем сегмент змейки."""
         score.increment()
         last_seg = c.coords(self.segments[0].instance)
         x = last_seg[2] - SEG_SIZE
@@ -161,29 +160,31 @@ class Snake(object):
         """Изменение направления движения змейки."""
         # Не реагируем на нажатие кнопки в противоход движения змейки
         button = 1
-        if abs(self.vector[0]) == abs(self.mapping[event.keysym][0]) and abs(
-            self.vector[1]
-        ) == abs(self.mapping[event.keysym][1]):
-            button = None
+        if event.keysym in self.mapping:
+            if abs(self.vector[0]) == abs(self.mapping[event.keysym][0]) and abs(
+                self.vector[1]
+            ) == abs(self.mapping[event.keysym][1]):
+                button = None
         if event.keysym in self.mapping and button:
             self.vector = self.mapping[event.keysym]
 
-    # Функция обновления змейки при старте новой игры
     def reset_snake(self):
+        """Удаление змейки."""
         for segment in self.segments:
             c.delete(segment.instance)
 
 
-# функция для вывода сообщения
 def set_state(item, state):
+    """Вывод сообщений."""
     c.itemconfigure(item, state=state)
     c.itemconfigure(BLOCK, state="hidden")
 
 
-# Функция для нажатия кнопки (новая игра)
 def clicked(event):
+    """Новая игра."""
     global IN_GAME
     s.reset_snake()
+
     IN_GAME = True
     c.delete(BLOCK)
     score.reset()
@@ -193,19 +194,18 @@ def clicked(event):
     start_game()
 
 
-# Функция для старта игры
 def start_game():
+    """Старт игры."""
     global s
     create_block()
     s = create_snake()
-
-    # Реагируем на нажатие клавиш
     c.bind("<KeyPress>", s.change_direction)
     main()
 
 
 # Создаем сегменты и змейку
 def create_snake():
+    """Создание сегментов и змейки."""
     segments = [
         Segment(SEG_SIZE, SEG_SIZE),
         Segment(SEG_SIZE * 2, SEG_SIZE),
@@ -268,7 +268,7 @@ c.tag_bind(close_but, "<Button-1>", close_win)
 # Считаем очки
 score = Score()
 
-# Запускаем игру
+print("Запускаем игру")
 start_game()
 
 # запускаем окно
