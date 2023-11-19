@@ -63,11 +63,22 @@ def create_block():
         posy,
         posx + SEG_SIZE,
         posy + SEG_SIZE,
-        fill="green",
+        fill="red",
     )
+    # Загрузите изображение (замените "your_image.png" на путь к вашему изображению)
+
+    # image = PhotoImage(file="g:/Games/games_on_python/snake/apple.jpg")
+
+    # Создайте изображение на Canvas вместо овала
+    # BLOCK = c.create_image(
+    #     posx + SEG_SIZE / 2,
+    #     posy + SEG_SIZE / 2,
+    #     image=image,
+    #     anchor="center",  # Указывает, что координаты относятся к центру изображения
+    # )
 
 
-# Подсчет очков
+# # Подсчет очков
 class Score(object):
     """Отображение очков."""
 
@@ -225,7 +236,7 @@ root = Tk()
 root.title("Змейка")
 
 # Создаем экземпляр класса Canvas
-c = Canvas(root, width=WIDTH, height=HEIGHT, bg="#3cb371")
+c = Canvas(root, width=WIDTH, height=HEIGHT, bg="#42aaff")
 c.grid()
 
 # Захватываем фокус для отлавливания нажатий клавиш
