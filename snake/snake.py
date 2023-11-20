@@ -12,7 +12,7 @@ HEIGHT = 600
 SEG_SIZE = 20
 
 # Переменная, отвечающая за состояние игры
-IN_GAME = True
+IN_GAME = False
 
 
 # Функция для управления игровым процессом
@@ -28,6 +28,8 @@ def main():
         # столкновения с краями игрового поля
         if x2 > WIDTH or x1 < 0 or y1 < 0 or y2 > HEIGHT:
             IN_GAME = False
+            s.reset_snake()
+            c.delete(BLOCK)
 
         # Поедание яблока
         elif head_coords == c.coords(BLOCK):
@@ -40,15 +42,14 @@ def main():
             for index in range(len(s.segments) - 1):
                 if head_coords == c.coords(s.segments[index].instance):
                     IN_GAME = False
+                    s.reset_snake()
+                    c.delete(BLOCK)
 
         # скорость змейки
         root.after(150, main)
     # Не IN_GAME -> останавливаем игру, удаляем змейку и выводим сообщения
     else:
-        if s:
-            s.reset_snake()
         set_state(restart_text, "normal")
-        set_state(game_over_text, "normal")
         set_state(close_but, "normal")
 
 
@@ -65,20 +66,8 @@ def create_block():
         posy + SEG_SIZE,
         fill="red",
     )
-    # Загрузите изображение (замените "your_image.png" на путь к вашему изображению)
-
-    # image = PhotoImage(file="g:/Games/games_on_python/snake/apple.jpg")
-
-    # Создайте изображение на Canvas вместо овала
-    # BLOCK = c.create_image(
-    #     posx + SEG_SIZE / 2,
-    #     posy + SEG_SIZE / 2,
-    #     image=image,
-    #     anchor="center",  # Указывает, что координаты относятся к центру изображения
-    # )
 
 
-# # Подсчет очков
 class Score(object):
     """Отображение очков."""
 
@@ -116,7 +105,7 @@ class Score(object):
 
 
 class Segment(object):
-    """Сегмент змейки"""
+    """Сегмент змейки."""
 
     def __init__(self, x, y):
         self.instance = c.create_oval(
@@ -188,26 +177,21 @@ class Snake(object):
 def set_state(item, state):
     """Вывод сообщений."""
     c.itemconfigure(item, state=state)
-    c.itemconfigure(BLOCK, state="hidden")
 
 
 def clicked(event):
     """Новая игра."""
-    global IN_GAME
-    s.reset_snake()
-
-    IN_GAME = True
-    c.delete(BLOCK)
     score.reset()
     c.itemconfigure(restart_text, state="hidden")
-    c.itemconfigure(game_over_text, state="hidden")
     c.itemconfigure(close_but, state="hidden")
     start_game()
 
 
 def start_game():
     """Старт игры."""
+    global IN_GAME
     global s
+    IN_GAME = True
     create_block()
     s = create_snake()
     c.bind("<KeyPress>", s.change_direction)
@@ -242,16 +226,6 @@ c.grid()
 # Захватываем фокус для отлавливания нажатий клавиш
 c.focus_set()
 
-# Текст результата игры
-game_over_text = c.create_text(
-    WIDTH / 2,
-    HEIGHT / 2,
-    font="Arial 50",
-    fill="green",
-    text="GAME OVER",
-    state="hidden",
-)
-
 # Текст начала новой игры после проигрыша
 restart_text = c.create_text(
     WIDTH / 2,
@@ -280,7 +254,7 @@ c.tag_bind(close_but, "<Button-1>", close_win)
 score = Score()
 
 print("Запускаем игру")
-start_game()
+main()
 
 # запускаем окно
 root.mainloop()
