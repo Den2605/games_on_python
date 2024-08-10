@@ -207,50 +207,51 @@ def create_snake():
 
 # выход из игры
 def close_win(root):
+    """Выход из игры."""
     exit()
 
 
-# Настройка главного окна
-root = Tk()
-# Название окна
-root.title("Змейка")
+if __name__ == "__main__":
+    # Настройка главного окна
+    root = Tk()
+    # Название окна
+    root.title("Змейка")
 
-# Создаем экземпляр класса Canvas
-c = Canvas(root, width=WIDTH, height=HEIGHT, bg="#42aaff")
-c.grid()
+    # Создаем экземпляр класса Canvas
+    c = Canvas(root, width=WIDTH, height=HEIGHT, bg="#42aaff")
+    c.grid()
 
-# Захватываем фокус для отлавливания нажатий клавиш
-c.focus_set()
+    # Захватываем фокус для отлавливания нажатий клавиш
+    c.focus_set()
 
-# Текст начала новой игры после проигрыша
-restart_text = c.create_text(
-    WIDTH / 2,
-    HEIGHT - HEIGHT / 3,
-    font="Arial 25",
-    fill="green",
-    text="Начать новую игру",
-    state="hidden",
-)
+    # Текст начала новой игры после проигрыша
+    restart_text = c.create_text(
+        WIDTH / 2,
+        HEIGHT - HEIGHT / 3,
+        font="Arial 25",
+        fill="green",
+        text="Начать новую игру",
+        state="hidden",
+    )
 
-# Текст выхода из программы после проигрыша
-close_but = c.create_text(
-    WIDTH / 2,
-    HEIGHT - HEIGHT / 5,
-    font="Arial 25",
-    fill="green",
-    text="Выход из игры",
-    state="hidden",
-)
+    # Текст выхода из программы после проигрыша
+    close_but = c.create_text(
+        WIDTH / 2,
+        HEIGHT - HEIGHT / 5,
+        font="Arial 25",
+        fill="green",
+        text="Выход из игры",
+        state="hidden",
+    )
 
-# Отработка событий при нажимания кнопок
-c.tag_bind(restart_text, "<Button-1>", clicked)
-c.tag_bind(close_but, "<Button-1>", close_win)
+    # Отработка событий при нажимания кнопок
+    c.tag_bind(restart_text, "<Button-1>", clicked)
+    c.tag_bind(close_but, "<Button-1>", close_win)
 
-# Считаем очки
-score = Score()
+    # Считаем очки
+    score = Score()
 
-print("Запускаем игру")
-main()
-
-# запускаем окно
-root.mainloop()
+    # Запускаем игру
+    main()
+    # запускаем окно
+    root.mainloop()
